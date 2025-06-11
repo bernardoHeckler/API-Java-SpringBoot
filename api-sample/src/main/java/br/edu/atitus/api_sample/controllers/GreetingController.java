@@ -1,6 +1,5 @@
 package br.edu.atitus.api_sample.controllers;
 
-import br.edu.atitus.api_sample.ApiSampleApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,35 +13,31 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/greeting")
-
 public class GreetingController {
-
-    private final ApiSampleApplication apiSampleApplication;
-
-    GreetingController(ApiSampleApplication apiSampleApplication) {
-        this.apiSampleApplication = apiSampleApplication;
-    }
 	
 	@PostMapping
 	public ResponseEntity<String> postGreeting(@RequestBody String value) throws Exception {
-		if (value.length() > 10)
-			throw new Exception("Tamanho do value deve ser no Máximo 10");
-			return ResponseEntity.status(HttpStatus.CREATED).body(value);
+		
+		if(value.length() > 10) {
+			throw new Exception("Tamanho do Value deve ser no máximo 10 Caracteres.");
+		}
+		return ResponseEntity.status(HttpStatus.CREATED).body(value);
 	}
-	
-	@GetMapping(value = {"","/","/{namePath}"})
+
+	@GetMapping(value = {"", "/", "/{namePath}"})
 	public String getGreeting(
 			@RequestParam(required = false) String name,
 			@PathVariable(required = false) String namePath) {
-		if (name == null)
+		if (name == null) {
 			name = namePath != null ? namePath : "World";
+		}
 		String returnGreeting = String.format("%s %s!", "Hello", name);
 		return returnGreeting;
 	}
 	
 	@ExceptionHandler(value = Exception.class)
-	public ResponseEntity<String> handlerException(Exception ex) {
-		String message = ex.getMessage().replaceAll("r\n", "");
+	public ResponseEntity<String> handlerException(Exception ex){
+		String message = ex.getMessage().replaceAll("\r\n", "");
 		return ResponseEntity.badRequest().body(message);
 	}
 }
