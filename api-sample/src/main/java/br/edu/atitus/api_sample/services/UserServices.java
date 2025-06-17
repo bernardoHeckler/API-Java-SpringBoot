@@ -13,13 +13,13 @@ import br.edu.atitus.api_sample.repositories.UserRepository;
 public class UserServices implements UserDetailsService{
 	
 	private final UserRepository repository;
-	private final PasswordEncoder passwordEnconder;
+	private final PasswordEncoder passwordEncoder;
 	
 	
-	public UserServices(UserRepository repository, PasswordEncoder passwordEnconder) {
+	public UserServices(UserRepository repository, PasswordEncoder passwordEncoder) {
 		super();
 		this.repository = repository;
-		this.passwordEnconder = passwordEnconder;
+		this.passwordEncoder = passwordEncoder;
 	}
 
 	public UserEntity save(UserEntity user) throws Exception {
@@ -50,7 +50,7 @@ public class UserServices implements UserDetailsService{
 		if(repository.existsByEmail(user.getEmail())) 
 			throw new Exception("Já existe usuário cadastrado com este e-mail");
 		
-		user.setPassword(passwordEnconder.encode(user.getPassword()));
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		
 		repository.save(user);
 	
@@ -60,7 +60,7 @@ public class UserServices implements UserDetailsService{
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		var user = repository.findByEmail(username)
-		.orElseThrow(() -> new UsernameNotFoundException("Usuário não Encontrado"));
+			.orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado."));
 		return user;
 	}
 }
