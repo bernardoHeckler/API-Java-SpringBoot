@@ -14,16 +14,16 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "tb_point")
-public class PointEntity  {
-
+public class PointEntity {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID id;
 	
-	@Column(columnDefinition = "Deci,aç(17,14", nullable = false)
+	@Column(columnDefinition = "Decimal(17,14)", nullable = false)
 	private double latitude;
 	
-	@Column(columnDefinition = "Deci,aç(17,14", nullable = false)
+	@Column(columnDefinition = "Decimal(17,14)", nullable = false)
 	private double longitude;
 	
 	@Column(length = 250, nullable = false)
@@ -53,8 +53,8 @@ public class PointEntity  {
 		return longitude;
 	}
 
-	public void setLongitude(double logitude) {
-		this.longitude = logitude;
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
 	}
 
 	public String getDescription() {
@@ -74,8 +74,5 @@ public class PointEntity  {
 	}
 	
 	
-	
-	
-	
-	
+
 }

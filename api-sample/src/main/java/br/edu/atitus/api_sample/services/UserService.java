@@ -8,15 +8,16 @@ import org.springframework.stereotype.Service;
 
 import br.edu.atitus.api_sample.entities.UserEntity;
 import br.edu.atitus.api_sample.repositories.UserRepository;
+import br.edu.atitus.api_sample.utils.validasenha;
+import br.edu.atitus.api_sample.utils.verificaemail;
 
 @Service
-public class UserServices implements UserDetailsService{
+public class UserService implements UserDetailsService{
 	
 	private final UserRepository repository;
 	private final PasswordEncoder passwordEncoder;
 	
-	
-	public UserServices(UserRepository repository, PasswordEncoder passwordEncoder) {
+	public UserService(UserRepository repository, PasswordEncoder passwordEncoder) {
 		super();
 		this.repository = repository;
 		this.passwordEncoder = passwordEncoder;
@@ -30,37 +31,42 @@ public class UserServices implements UserDetailsService{
 			throw new Exception("Nome inválido");
 		user.setName(user.getName().trim());
 		
+		
 		if (user.getEmail() == null || user.getEmail().isEmpty())
 			throw new Exception("E-mail inválido");
 		user.setEmail(user.getEmail().trim().toLowerCase());
+		// TODO Validar o e-mail (texto@texto.texto) => REGEX
 		
-		//TODO Validar o e-mail (texto@texto.texto) => Regex
-		
-		if (user.getPassword() == null
+		if (user.getPassword() == null 
 				|| user.getPassword().isEmpty()
-				|| user.getPassword().length() < 8)
-			throw new Exception("Passoword inválido");
-		
-		//TODO Validar a força da senha (Caracteres maiúsculo, minúsculo e numerais)
+				|| user.getPassword().length() < 8
+				|| !validasenha.isValidPassword(user.getPassword()))
+			throw new Exception("Password inválido");
+		// TODO Validar a força da senha (Caracteres maiúsculos, minúsculos e númerais)
 		
 		if (user.getType() == null)
 			throw new Exception("Tipo de usuário inválido");
 		
-		
-		if(repository.existsByEmail(user.getEmail())) 
+		if (repository.existsByEmail(user.getEmail()))
 			throw new Exception("Já existe usuário cadastrado com este e-mail");
+		
+		if (verificaemail.isValidEmail(user.getEmail())){
+			
+			throw new Exception("E-mail inválido");
+		}
 		
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		
 		repository.save(user);
-	
+		
 		return user;
 	}
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		var user = repository.findByEmail(username)
-			.orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado."));
+				.orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
 		return user;
 	}
+
 }

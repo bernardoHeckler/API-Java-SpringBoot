@@ -1,5 +1,4 @@
 package br.edu.atitus.api_sample.components;
-
 import java.util.Date;
 
 import javax.crypto.SecretKey;

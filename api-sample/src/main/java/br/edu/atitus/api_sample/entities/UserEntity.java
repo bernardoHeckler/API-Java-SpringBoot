@@ -17,7 +17,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-
 @Entity
 @Table(name = "tb_user")
 public class UserEntity implements UserDetails{
@@ -92,4 +91,5 @@ public class UserEntity implements UserDetails{
 	}
 	
 	
+
 }
