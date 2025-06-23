@@ -40,14 +40,17 @@ public class PointController {
 		return ResponseEntity.status(201).body(point);
 	}
 
-	@PutMapping("/{id}")
-	public ResponseEntity<PointEntity> update(@PathVariable UUID id, @RequestBody PointDTO dto) throws Exception {
-	    PointEntity point = new PointEntity();
-	    BeanUtils.copyProperties(dto, point);
-	    point.setId(id); // Importante serviço vai atualizar o ponto 
-	    service.save(point); //Faz o Save, caso atualize com o ID fornecido
-	    return ResponseEntity.ok(point);
-	}
+	// Método que fará a ATUALIZAÇÃO (PUT)
+		@PutMapping("/{id}")
+		public ResponseEntity<PointEntity> update(@PathVariable UUID id, @RequestBody PointDTO dto) throws Exception {
+			PointEntity updatedPoint = new PointEntity();
+			BeanUtils.copyProperties(dto, updatedPoint); // Copia os dados do DTO para o objeto temporário
+			
+			// Chama o método de atualização no serviço, passando o ID do caminho e os dados
+			PointEntity result = service.update(id, updatedPoint);
+			
+			return ResponseEntity.ok(result); // Retorna o objeto atualizado
+		}
 
 
 
