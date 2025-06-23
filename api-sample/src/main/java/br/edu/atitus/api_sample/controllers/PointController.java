@@ -41,9 +41,12 @@ public class PointController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<String> update(@PathVariable UUID id, @RequestBody PointDTO dto) throws Exception {
-		service.editPoint(id,dto);
-		return ResponseEntity.ok().body("Ponto alterado com sucesso");
+	public ResponseEntity<PointEntity> update(@PathVariable UUID id, @RequestBody PointDTO dto) throws Exception {
+	    PointEntity point = new PointEntity();
+	    BeanUtils.copyProperties(dto, point);
+	    point.setId(id); // Importante serviço vai atualizar o ponto 
+	    service.save(point); //Faz o Save, caso atualize com o ID fornecido
+	    return ResponseEntity.ok(point);
 	}
 
 

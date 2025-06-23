@@ -1,16 +1,12 @@
 package br.edu.atitus.api_sample.services;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
-import br.edu.atitus.api_sample.components.ExtractEmail;
-import br.edu.atitus.api_sample.dtos.PointDTO;
-import br.edu.atitus.api_sample.repositories.UserRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import br.edu.atitus.api_sample.dtos.PointDTO;
 import br.edu.atitus.api_sample.entities.PointEntity;
 import br.edu.atitus.api_sample.entities.UserEntity;
 import br.edu.atitus.api_sample.repositories.PointRepository;
@@ -19,13 +15,11 @@ import br.edu.atitus.api_sample.repositories.PointRepository;
 public class PointService {
 
 	private final PointRepository repository;
-	private final UserRepository userRepository;
 
-	public PointService(PointRepository repository, UserRepository userRepository) {
+	public PointService(PointRepository repository) {
 		super();
 		this.repository = repository;
-        this.userRepository = userRepository;
-    }
+	}
 	
 	public PointEntity save(PointEntity point) throws Exception {
 		if (point == null)
@@ -47,25 +41,7 @@ public class PointService {
 		
 		return repository.save(point);
 	}
-
-
-	public void editPoint (UUID id , PointDTO pointDTO) throws Exception {
-		PointEntity point = repository.findById(id).orElseThrow(() -> new Exception("Point não existe"));
-		UserEntity user = point.getUser();
-		String email = ExtractEmail.extrairEmail();
-		System.out.println(email);
-		System.out.println(user.getEmail());
-		if (!user.getEmail().equals(email)) {
-			throw new Exception("Esse usuario não pode realizar essa ação");
-		}
-		point.setDescription(pointDTO.description());
-		point.setLatitude(pointDTO.latitude());
-		point.setLongitude(pointDTO.longitude());
-		repository.save(point);
-	}
-
-
-
+	
 	public void deleteById(UUID id) throws Exception {
 		var point = repository.findById(id)
 				.orElseThrow(() -> new Exception("Não existe ponto cadastrado com este ID"));
@@ -77,11 +53,18 @@ public class PointService {
 		
 		repository.deleteById(id);
 	}
+	
+	// CORREÇÃO FEITO TROQUEI O FINDALL PARA 
+	// return repository.findByUser(userAuth);
+	// NA linha 61
+	public List<PointEntity> findAll() {
+		UserEntity userAuth = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		return repository.findByUser(userAuth);
+	}
 
-	public List<PointEntity> findAll() throws Exception {
-		System.out.println(ExtractEmail.extrairEmail());
-		String email = ExtractEmail.extrairEmail();
-		return repository.findByUserEmail(email);
+	public void editPoint(UUID id, PointDTO dto) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }
