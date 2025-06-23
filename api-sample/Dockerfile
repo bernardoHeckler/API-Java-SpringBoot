@@ -26,6 +26,7 @@ WORKDIR /app
 
 # Copia o JAR compilado da etapa de build
 # Certifique-se de que 'api-sample-0.0.1-SNAPSHOT.jar' corresponde ao nome real do seu JAR
+# O nome do JAR é geralmente <artifactId>-<version>.jar, que no seu caso é api-sample-0.0.1-SNAPSHOT.jar
 COPY --from=build /app/target/api-sample-0.0.1-SNAPSHOT.jar app.jar
 
 # Expõe a porta que a aplicação vai rodar
