@@ -1,22 +1,35 @@
+# Use a imagem base do Maven para construir a aplicação
 FROM maven:3.9.6-eclipse-temurin-21 AS build
+
+# Define o diretório de trabalho dentro do container
 WORKDIR /app
 
-# Primeiro copia apenas o POM para cache de dependências
-COPY api-sample/pom.xml .
+# Copia o arquivo pom.xml para o diretório de trabalho
+# Agora ele busca o pom.xml diretamente na raiz do repositório clonado
+COPY pom.xml .
+
+# Baixa as dependências para que não precisem ser baixadas novamente se apenas o código mudar
 RUN mvn dependency:go-offline
 
-# Depois copia o restante do código fonte
-COPY api-sample/src ./src
+# Copia o código fonte da aplicação para o diretório de trabalho
+# Agora ele busca a pasta src diretamente na raiz do repositório clonado
+COPY src ./src
 
-# Executa o build
-RUN mvn clean package -DskipTests
+# Empacota a aplicação em um JAR executável
+RUN mvn clean install -DskipTests
 
-FROM eclipse-temurin:21.0.6_7-jre-ubi9-minimal
+# Use a imagem base do Temurin JRE para rodar a aplicação (menor que a JDK completa)
+FROM eclipse-temurin:21.0.6_7-jre-ubi9-minimal AS stage-1
+
+# Define o diretório de trabalho
 WORKDIR /app
 
-# Copia o JAR específico (assumindo que o nome termina com .jar)
-COPY --from=build /app/target/*.jar app.jar
+# Copia o JAR compilado da etapa de build
+# Certifique-se de que 'api-sample-0.0.1-SNAPSHOT.jar' corresponde ao nome real do seu JAR
+COPY --from=build /app/target/api-sample-0.0.1-SNAPSHOT.jar app.jar
 
+# Expõe a porta que a aplicação vai rodar
 EXPOSE 8080
-CMD ["java", "-jar", "app.jar"]
 
+# Comando para rodar a aplicação quando o container iniciar
+ENTRYPOINT ["java", "-jar", "app.jar"]
