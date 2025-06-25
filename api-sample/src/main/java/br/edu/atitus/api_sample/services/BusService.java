@@ -15,12 +15,12 @@ public class BusService {
     // Dados de ônibus simulados em memória para demonstração
     // Cada array interno é [latitude, longitude, description]
     private static final List<Object[]> SIMULATED_BUS_LOCATIONS = Arrays.asList(
-        new Object[]{-23.5510, -46.6340, "Ônibus 101 - Centro", "bus_101"},
-        new Object[]{-23.5480, -46.6300, "Ônibus 202 - Santa Cruz", "bus_202"},
-        new Object[]{-23.5600, -46.6450, "Ônibus 303 - Avenida Paulista", "bus_303"},
-        new Object[]{-23.5550, -46.6380, "Ônibus 404 - Brigadeiro", "bus_404"},
-        new Object[]{-23.6000, -46.7000, "Ônibus 505 - Longe", "bus_505"}, // Ônibus mais distante
-        new Object[]{-23.5500, -46.6330, "Ônibus 606 - Perto do Ponto", "bus_606"} // Ônibus bem próximo
+        new Object[]{-28.2389, -52.4353, "Linha 101 - Valinhos", "bus_101"},
+        new Object[]{-28.2692, -52.4287, "Linha 202 - Boqueirão", "bus_202"},
+        new Object[]{-28.2633, -52.4122, "Linha 303 - Centro", "bus_303"},
+        new Object[]{-28.2651, -52.3976, "Linha 404 - Atitus Educação", "bus_404"},
+        new Object[]{-28.2739, -52.3914, "Linha 505 - Lucas Araujo", "bus_505"}, 
+        new Object[]{-28.2351, -52.3806, "Linha 606 - UPF", "bus_606"} 
     );
 
     // Método para encontrar ônibus próximos a uma dada localização e raio
